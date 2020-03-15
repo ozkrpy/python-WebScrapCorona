@@ -3,31 +3,41 @@ from time import sleep
 import re
 from datetime import datetime
 import smtplib
-
-from bs4 import BeautifulSoup
-import requests
+import re
 import pandas as pd
-
+from lxml import html
 
 class Coronavirus():
     def __init__(self):
         print("webdriver")
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
 
     def get_data(self):
         try:
             print("site")
-            #self.driver.get('https://www.worldometers.info/coronavirus/')
-            self.driver.get('C:\\Users\\ruffineo\\Downloads\\HTML_EXAMPLE\\Coronavirushtml.html')
+            self.driver.get('https://www.worldometers.info/coronavirus/')
+            #self.driver.get('C:\\Users\\ruffineo\\Downloads\\HTML_EXAMPLE\\Coronavirushtml.html')
             print("driver get OK")
             try:
-                tbl = self.driver.find_element_by_xpath('//*[@id="main_table_countries"]').get_attribute('outerHTML')
+                tbl = self.driver.find_element_by_id('main_table_countries')#.get_attribute('outerHTML')
+                #print("table from site OK", tbl)
+                #xml = html.fromstring(tbl)
+                #tabla =  tbl.xpath("//table[@id='main_table_countries']")[0]
+                for row in tbl.find_elements_by_css_selector('tr'):
+                    for cell in row.find_elements_by_tag_name('td'):
+                        if cell.text == 'Paraguay':
+                            print(cell.text)
+                #cntry = tbl.find_element_by_xpath("//td[contains(text(), 'Paraguay ')]")#.get_attribute('outerHTML')
                 #country_element = tbl.find_element_by_xpath("//td[contains(text(), 'Paraguay ')]")
-                df  = pd.read_html(str(tbl), header=0)
+                #print('country:', cntry)
+                #fila = cntry.find_element_by_xpath("./..").get_attribute()
+                #print('fila:', fila)
+                #print('fila:', fila)
+                #df  = pd.read_html(cntry)
                 #df = pd.DataFrame(df, columns = ['Index','Pais','Total','Nuevos','TotalMuertos','NuevosMuertos','Recuperados','Activos','Criticos','PorcentajePor1MHabitantes'])
-                print('df: ', str(df[0]))
-                cadena = str(df[0])
-                print(cadena.split(" Paraguay ", 1)[-1])
+                #print('df: ', str(df[0]))
+                #cadena = str(df[0])
+                #print('PY:', cadena.splitlines())
                 #print(df)
                 #print(df.str.contains('|'.join('Paraguay')).any(level=0))
                 #all_columns_list = df.tolist() #get a list of all the column names
@@ -43,9 +53,9 @@ class Coronavirus():
                 table = self.driver.find_element_by_id('main_table_countries')#find_element_by_xpath('//*[@id="main_table_countries"]/tbody[1]')
                 print("table from site OK")
                 country_element = table.find_element_by_xpath("//td[contains(text(), 'Paraguay ')]")
-                print("Paraguay stats OK", country_element.text)
+                print("Country stats OK", country_element.text)
                 row = country_element.find_element_by_xpath("./..")
-                print("Row with info OK: ", row.text)
+                print("Row with info OK:", row.text)
                 data = row.text.split(" ")
                 print("data split, total " + data[1] + " new " + data[2] + " active " + data[3] + " seriedad " + data[4] + " porcentaje " + data[5])# + " recovered " + data[6] + " critical " + data[7])
                 total_cases = data[1]
