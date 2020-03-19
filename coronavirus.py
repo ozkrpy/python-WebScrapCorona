@@ -20,7 +20,7 @@ class Coronavirus():
             #self.driver.get('C:\\Users\\ruffineo\\Downloads\\HTML_EXAMPLE\\Coronavirushtml.html')
             print("driver get OK")
             try:
-                tbl = self.driver.find_element_by_id('main_table_countries')#.get_attribute('outerHTML')
+                tbl = self.driver.find_element_by_id('main_table_countries_today')#.get_attribute('outerHTML')
                 print("encontro tabla")
                 paises = []
                 for row in tbl.find_elements_by_css_selector('tr'):
@@ -33,25 +33,29 @@ class Coronavirus():
                     if detalles!=[]:
                         paises.append(detalles)    
             except Exception as error:
+                paises = []
                 print("{}".format(error))
             try:
                 print("table from site OK")
+                paraguay = []
                 for index, item in enumerate(paises):
                     if item[0]=='Paraguay':
                         paraguay = paises[index]
-                pais = paraguay[0]
-                total = paraguay[1]
-                nuevos = paraguay[2]
-                totalmuertos = paraguay[3]
-                nuevosmuertos = paraguay[4]
-                recuperados = paraguay[5]
-                activos = paraguay[6]
-                criticos = paraguay[7]
-                porcentaje = paraguay[8]
+                        pais = paraguay[0]
+                        total = paraguay[1]
+                        nuevos = paraguay[2]
+                        totalmuertos = paraguay[3]
+                        nuevosmuertos = paraguay[4]
+                        recuperados = paraguay[5]
+                        activos = paraguay[6]
+                        criticos = paraguay[7]
+                        porcentaje = paraguay[8]
             except Exception as e:
                 print("{}".format(e))
-
-            send_mail(pais,total,nuevos,totalmuertos,nuevosmuertos,activos,recuperados,criticos,porcentaje)
+            if pais != '':
+                send_mail(pais,total,nuevos,totalmuertos,nuevosmuertos,activos,recuperados,criticos,porcentaje)
+            else:
+                print('No se encontraron datos.')
             self.driver.close()
         except:
             self.driver.quit()
@@ -84,7 +88,7 @@ def send_mail(country_element,
         \nTotal muertos: ' + total_deaths + '\
         \nMuertes nuevas: ' + new_deaths + '\
         \nPacientes activos: ' + active_cases + '\
-        \nTotal recovered: ' + total_recovered + '\
+        \nTotal recuperados: ' + total_recovered + '\
         \nCasos criticos: ' + serious_critical  + '\
         \n% Sobre 1M habitantes: ' + porcentaje  + '%' + '\
         \nMas informacion: https://www.worldometers.info/coronavirus/'
@@ -93,7 +97,7 @@ def send_mail(country_element,
 
     server.sendmail(
         'coronavirusmailer@mail.com',
-        ['familiaruffinellivera@gmail.com','veroruffi92@gmail.com','ruffineo@personal.com.py'],
+        ['veroruffi92@gmail.com','ruffineo@personal.com.py'],
         msg
     )
     print('Hey Email has been sent!')
