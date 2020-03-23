@@ -10,8 +10,8 @@ from lxml import html
 class Coronavirus():
     def __init__(self):
         print("webdriver")
-        #self.driver = webdriver.Firefox()
-        self.driver = webdriver.Chrome()
+        self.driver = webdriver.Firefox()
+        #self.driver = webdriver.Chrome()
 
     def get_data(self):
         try:
