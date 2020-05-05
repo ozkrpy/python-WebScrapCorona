@@ -97,7 +97,7 @@ def send_mail(country_element,
 
     server.sendmail(
         'coronavirusmailer@mail.com',
-        ['veroruffi92@gmail.com','ruffineo@personal.com.py'],
+        ['MAIL RECIPIENTS GOES HERE'],
         msg
     )
     print('Hey Email has been sent!')
